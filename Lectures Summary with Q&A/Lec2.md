@@ -1,7 +1,6 @@
 
 # Lecture 02: Java Syntax and Class Review
 
-Here is the summary and practice set for **Lecture 02**.
 
 ## Part 1: Lecture Summary & Explanation
 
