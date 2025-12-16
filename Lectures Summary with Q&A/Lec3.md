@@ -155,7 +155,4 @@ Arr[0]: 50
 
 *(Explanation: `num` is a primitive, so the change to `x` inside the method does not affect `num`. `arr` is an object, so `y[0] = 50` updates the actual array in memory. However, `y = new int[3]` breaks the link to the original array, so the subsequent `y[0] = 100` only affects the new local array, not the original `arr`.)*
 
-</details>
-
-```
 
