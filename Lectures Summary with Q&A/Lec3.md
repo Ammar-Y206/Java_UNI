@@ -1,7 +1,6 @@
 
 # Lecture 03: Java Syntax, Memory, and Encapsulation
 
-Here is the summary and practice set for **Lecture 03**.
 
 ## Part 1: Lecture Summary & Explanation
 
