@@ -140,5 +140,3 @@ String: 10
 ```
 
 *(Explanation: The compiler selects the correct `print` method based on the argument type passed—`int` vs `String`).*
-
-</details>
