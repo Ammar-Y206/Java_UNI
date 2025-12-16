@@ -213,7 +213,5 @@ Result: 200
 
 *(Explanation: `x > y` is false, so it picks 200. Strings "1" and "2" concatenate to "12". Integers 5 and 10 add up to 15).*
 
-</details>
 
-```
 
