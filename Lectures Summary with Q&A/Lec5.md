@@ -1,63 +1,61 @@
 
-# Lecture 05: Polymorphism, Abstract Classes, and Interfaces
+# Lecture 05: Java Class Design
 
 
-## Part 1: Lecture Summary & Explanation
+## Part 1: Comprehensive Lecture Summary & Explanation
 
-### 1. Method Overriding
-* **Definition:** When a subclass provides a specific implementation for a method that is already defined in its parent class.
-* **Rules:**
-    * The method name, return type, and arguments must match the parent's method **exactly**.
-* **`@Override` Annotation:** It is good practice to place `@Override` above the method. It tells the compiler to check if you are actually overriding a parent method (preventing typos).
+### 1. Access Control (Encapsulation)
+Java uses access modifiers to protect data and hide implementation details. There are four levels of access, determined by keywords.
+
+* **`private`**: Visible **only within the same class**. This is the strictest level and is used for sensitive data.
+* **Default (no keyword)**: Visible to any class in the **same package**. If you don't write a keyword, this is what you get.
+* **`protected`**: Visible to classes in the **same package** AND **subclasses in other packages**. This is crucial for inheritance.
+* **`public`**: Visible to **everyone** (the entire universe).
 
 
 
-* **Overloading vs. Overriding:**
-    * *Overloading:* Same method name, **different** arguments (in the same class).
-    * *Overriding:* Same method name, **same** arguments (in a subclass).
+**Table of Visibility:**
 
-### 2. Virtual Method Invocation (Polymorphism)
-* **The Concept:** This is the magic of Java. When you call a method on an object, the JVM determines *at runtime* which version of the method to execute based on the **actual object** type, not the reference type.
+| Modifier | Same Class | Same Package | Subclass (Diff Pkg) | Universe |
+| :--- | :---: | :---: | :---: | :---: |
+| **private** | ✅ | ❌ | ❌ | ❌ |
+| **default** | ✅ | ✅ | ❌ | ❌ |
+| **protected**| ✅ | ✅ | ✅ | ❌ |
+| **public** | ✅ | ✅ | ✅ | ✅ |
 
+### 2. Method Overriding
+* **Definition:** A subclass provides a specific implementation for a method already defined in its parent class.
+* **Rules:** The method signature (name, argument list, and return type) must be identical to the parent's.
+* **`@Override` Annotation:** It is best practice to put `@Override` above the method. This helps the compiler catch errors (like if you misspelled the method name).
+
+### 3. Polymorphism & Virtual Method Invocation
+* **Virtual Method Invocation:** When you call a method on an object, Java determines which version to run based on the **actual object type** in memory at runtime, not the variable type.
 * **Example:**
   ```java
   Employee e = new Manager();
-  e.getDetails();
+  e.getSalary(); // Runs the Manager's version
+
+
+### 4. Object Casting & Type Safety
+
+* **Upward Casting (Implicit):** Converting a subclass to a superclass (e.g., `Employee e = new Manager();`). This is automatic.
+* **Downward Casting (Explicit):** Converting a generic reference back to a specific subclass (e.g., `Manager m = (Manager) e;`). This is risky because the object might not actually be a Manager.
+* **`instanceof` Operator:** Used to strictly check an object's type before casting to avoid runtime errors (`ClassCastException`).
+
+```java
+if (e instanceof Manager) {
+    Manager m = (Manager) e; // Safe cast
+}
 
 ```
 
-* Even though the variable `e` is of type `Employee`, the JVM sees that the object in memory is a `Manager`. If `Manager` overrides `getDetails()`, the **Manager's** version runs.
+### 5. The `Object` Class
 
-### 3. The `Object` Class
+Every class in Java inherits from `java.lang.Object`. You often override these methods to make your classes useful:
 
-* Every class in Java automatically inherits from `java.lang.Object` (the root of the class hierarchy).
-* **Key Methods to Override:**
-* `toString()`: Returns a string representation of the object. By default, it prints the memory address. You should override this to print meaningful data (e.g., "Employee: John").
-* `equals(Object o)`: Compares objects. By default, it checks if they are the *same instance* in memory (`==`). You usually override this to check if their *data* is equal.
-
-
-
-### 4. Abstract Classes
-
-* **Purpose:** To define a template for a group of subclasses. It models a general concept (like "Animal") that shouldn't exist on its own.
-* **Characteristics:**
-* Declared using the `abstract` keyword.
-* **Cannot be instantiated** (you cannot do `new AbstractClass()`).
-* Can contain **abstract methods** (methods without a body) that subclasses *must* implement.
-* Can also contain concrete (fully implemented) methods.
-
-
-
-### 5. Interfaces
-
-* **Definition:** An interface is a contract. It defines *what* a class can do, without defining *how* it does it.
-* **Key Features:**
-* Declared using `interface`.
-* All methods are implicitly `public` and `abstract` (before Java 8).
-* A class uses `implements` to use an interface.
-* **Multiple Inheritance:** A class can extend only one parent class, but it can implement **multiple** interfaces.
-
-
+* **`toString()`:** Returns a string representation of the object. Default is memory address; override it to return meaningful data like "ID: 101, Name: Bob".
+* **`equals(Object o)`:** Checks equality. Default uses `==` (memory address check). Override it to compare actual data (like IDs).
+* **`hashCode()`:** Returns a unique integer for the object. If you override `equals`, you must override `hashCode` so that equal objects have the same hash code.
 
 ---
 
@@ -65,67 +63,72 @@
 
 ### Section A: Multiple Choice Questions (MCQ)
 
-**1. What happens if you try to instantiate an abstract class (e.g., `Shape s = new Shape();`)?**
+**1. Which access modifier allows a method to be accessed by subclasses in a different package, but NOT by unrelated classes in that different package?**
 
-* A) It creates a generic object.
-* B) It throws a runtime exception.
-* C) It causes a compiler error.
-* D) It is allowed if the class has no abstract methods.
+* A) `public`
+* B) `private`
+* C) `protected`
+* D) Default (Package-Private)
 
-**2. Which annotation should you use to ensure you are correctly redefining a parent class's method?**
+**2. What is the specific purpose of the `instanceof` operator?**
 
-* A) `@Overload`
-* B) `@Override`
-* C) `@Abstract`
-* D) `@Virtual`
+* A) To create a new instance of a class.
+* B) To check if an object is of a specific type to safely perform a cast.
+* C) To call the parent class's constructor.
+* D) To override a method from the Object class.
 
-**3. In Java, a class can inherit from _______ class(es) and implement _______ interface(s).**
+**3. If you override the `equals()` method in a class, which other method from the `Object` class must you also override to maintain the contract?**
 
-* A) one, one
-* B) multiple, multiple
-* C) one, multiple
-* D) multiple, one
+* A) `toString()`
+* B) `clone()`
+* C) `hashCode()`
+* D) `finalize()`
 
 ### Section B: Code Writing
 
 **Task:**
 
-1. Define an **interface** named `Playable`.
-* It should have one method: `void play()`.
-
-
-2. Create a class `Guitar` that **implements** `Playable`.
-3. Inside `Guitar`, implement the `play` method to print "Strumming strings...".
+1. Create a class `Person` with a **protected** string field `name`.
+2. Create a subclass `Student` that extends `Person`.
+3. Inside `Student`, override the `toString()` method.
+4. The `toString()` implementation should return "Student Name: " followed by the value of the inherited `name` field.
 
 **Write your code below:**
 
 ```java
-// Write your interface and class here
+// Write your classes here
 
 ```
 
 ### Section C: Output Prediction
 
-**What is the output of the following polymorphism example?**
+**What is the output of the following polymorphism code?**
 
 ```java
-class Animal {
-    public void makeSound() {
-        System.out.println("Some generic sound");
+class Device {
+    public void turnOn() {
+        System.out.println("Device is starting...");
     }
 }
 
-class Cat extends Animal {
+class Phone extends Device {
     @Override
-    public void makeSound() {
-        System.out.println("Meow");
+    public void turnOn() {
+        System.out.println("Phone is booting up...");
     }
 }
 
-public class TestPoly {
+public class TestCast {
     public static void main(String[] args) {
-        Animal myPet = new Cat();
-        myPet.makeSound();
+        Device myDev = new Phone(); // Upward cast
+        
+        // Virtual Method Invocation
+        myDev.turnOn();
+        
+        // Instanceof check
+        if (myDev instanceof Phone) {
+            System.out.println("It is a phone!");
+        }
     }
 }
 
@@ -140,21 +143,21 @@ public class TestPoly {
 
 ### MCQ Answers:
 
-1. **C** (Abstract classes cannot be instantiated).
-2. **B** (`@Override` is the correct annotation).
-3. **C** (Java supports single class inheritance but multiple interface implementation).
+1. **C** (`protected` gives access to subclasses regardless of package).
+2. **B** (`instanceof` is for type checking before casting).
+3. **C** (`hashCode()` must be consistent with `equals()`).
 
 ### Code Writing Answer:
 
 ```java
-interface Playable {
-    void play();
+class Person {
+    protected String name = "Unknown";
 }
 
-class Guitar implements Playable {
+class Student extends Person {
     @Override
-    public void play() {
-        System.out.println("Strumming strings...");
+    public String toString() {
+        return "Student Name: " + this.name;
     }
 }
 
@@ -163,8 +166,11 @@ class Guitar implements Playable {
 ### Output Prediction Answer:
 
 ```text
-Meow
+Phone is booting up...
+It is a phone!
 
 ```
 
-*(Explanation: Virtual Method Invocation ensures that even though `myPet` is declared as an `Animal`, the JVM calls the `Cat` version of the method because the actual object in memory is a `Cat`).*
+*(Explanation: The `turnOn` method runs the `Phone` version because the actual object is a `Phone`. The `instanceof` check is true, so the print statement executes.)*
+
+
